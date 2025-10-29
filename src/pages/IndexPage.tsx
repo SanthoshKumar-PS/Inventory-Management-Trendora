@@ -10,7 +10,7 @@ const IndexPage = () => {
       <Header onMenuClick= {()=>setMobileSidebarOpen(true)}/>
       <div className="flex">
         <SidebarNavigation mobileSidebarOpen={mobileSidebarOpen} onMobileMenuClose={()=>setMobileSidebarOpen(false)}/>
-        <main>
+        <main className="flex-1 p-4 md:p-6 lg:p-8">
           <Outlet/>
         </main>
 
