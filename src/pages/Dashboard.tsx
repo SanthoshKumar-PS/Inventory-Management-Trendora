@@ -10,7 +10,7 @@ const Dashboard = () => {
     <div className="space-y-4 md:space-y-6">
       <div>
         <h2 className="text-2xl text:3xl font-bold">Dashboard</h2>
-        <p className="text-sm md:text-base text-gray-700/50">
+        <p className="text-sm md:text-base text-gray-500/80">
           View and manage stocks at one place
         </p>
       </div>
