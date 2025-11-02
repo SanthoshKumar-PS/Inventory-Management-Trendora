@@ -2,9 +2,10 @@ type SeverityType = 'critical' | 'warning' | 'low';
 
 type SeverityBadgeProps = {
     type:SeverityType,
-    count:number    
+    count?:number,
+    scrollToContainer?:(tagName:string)=>void;  
 }
-const SeverityBadge = ({type,count}:SeverityBadgeProps) => {
+const SeverityBadge = ({type,count,scrollToContainer}:SeverityBadgeProps) => {
     const config = {
         critical : {
             bg:'bg-red-500',
@@ -24,8 +25,9 @@ const SeverityBadge = ({type,count}:SeverityBadgeProps) => {
     }[type];
 
     return (
-        <div className={`px-3 py-1 rounded-full text-sm font-medium ${config.bg} ${config.textColor}`}>
-            {count ? `${count} ${config.text}` : config.text}
+        <div onClick={()=>{scrollToContainer && scrollToContainer(type)}} 
+        className={`px-3 py-1 rounded-full cursor-pointer hover:opacity-90 transition-all ${count?"text-sm":"text-xs"} font-medium ${config.bg} ${config.textColor}`}>
+            {count ? `${count} ${config.text}` : config.text.toUpperCase()}
         </div>
     )
 

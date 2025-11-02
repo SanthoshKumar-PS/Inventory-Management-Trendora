@@ -104,7 +104,7 @@ const Products = () => {
         )}
 
         {filterProducts.length===0 && (<div className="border border-gray-300 rounded-lg p-4 col-span-full py-10">
-          <div className="flex flex-col justify-center items-center text-gray-600/80">
+          <div className="flex flex-col justify-center items-center text-[#8F8F8F]">
             <Package className="h-10 w-10 mb-2"/>
             <p className="text-lg font-medium">No products found</p>
             <p className="text-sm">Try adjusting your search</p>
