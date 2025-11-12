@@ -1,6 +1,6 @@
 import { mockProducts } from "@/lib/datas/mockData";
 import type { LowStockAlert } from "@/types/inventory";
-import { AlertTriangle, Badge, Package } from "lucide-react";
+import { AlertTriangle, Package } from "lucide-react";
 
 export const LowStockPanel = () => {
   const lowStockItems: LowStockAlert[] = mockProducts

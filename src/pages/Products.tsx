@@ -9,7 +9,7 @@ import { useState } from "react";
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [products, setProducts] = useState<Product[]>(mockProducts);
-  // const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const filterProducts: Product[] = products.filter(
     (product) =>
