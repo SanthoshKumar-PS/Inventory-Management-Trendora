@@ -18,7 +18,7 @@ const Dashboard = () => {
       {/* 4 Card  */}
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          title="Total Products"
+          title="Total Orders Today"
           value={mockMetrics.totalProducts}
           icon={Package}
           variant="default"

@@ -9,7 +9,7 @@ import { useState } from "react";
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  // const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const filterProducts: Product[] = products.filter(
     (product) =>
@@ -49,7 +49,7 @@ const Products = () => {
 
       {/* Products */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filterProducts.length>0 && filterProducts.map((product,index)=>{
+        {filterProducts.length>0 && filterProducts.map((product)=>{
           const statusLabelColor = getStatus(product.currentStock,product.reorderLevel)
           return (
           <div key={product.id} className="bg-white border border-gray-300 rounded-lg p-2 md:p-5 space-y-2">

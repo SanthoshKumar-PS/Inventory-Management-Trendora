@@ -1,6 +1,6 @@
 import SeverityBadge from "@/components/lowStock/SeverityBadge";
 import StockSection from "@/components/lowStock/StockSection";
-import { TriangleAlert } from "lucide-react";
+import { Package, TriangleAlert } from "lucide-react";
 
 const LowStockAlerts = () => {
   const scrollToContainer = (tagName: string) => {
@@ -12,6 +12,14 @@ const LowStockAlerts = () => {
   };
   return (
     <div className="space-y-6">
+      {/* No products in this status */}
+      <div className="flex flex-col items-center justify-center text-center space-y-2 py-10 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+        <Package size={40} className="text-gray-400 " />
+        <p className="text-gray-500 text-sm md:text-base">
+          No products in this category right now.
+        </p>
+      </div>
+      
       {/* Headers */}
       <div className="flex flex-col lg:flex-row items-start lg:justify-between lg:items-center gap-4">
         <div>

@@ -7,7 +7,8 @@ interface ProductCardProps {
     type: 'critical' | 'warning' | 'low'
     product : Product | null; //For UI purpos, need to give actual Data
 }
-const ProductCard = ({type,product}:ProductCardProps) => {
+// const ProductCard = ({type,product}:ProductCardProps) => {
+const ProductCard = ({type}:ProductCardProps) => {
   return (
         <div className="bg-white border border-gray-300 rounded-lg p-4 md:p-5 space-y-2 md:space-y-4">
           {/* Package, Heading,badge */}
