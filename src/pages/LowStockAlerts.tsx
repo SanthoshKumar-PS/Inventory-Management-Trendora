@@ -1,8 +1,16 @@
 import SeverityBadge from "@/components/lowStock/SeverityBadge";
 import StockSection from "@/components/lowStock/StockSection";
+import { Spinner } from "@/components/Spinner";
+import type { Product } from "@/types/tableTypes";
+import axios from "axios";
 import { Package, TriangleAlert } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const LowStockAlerts = () => {
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  
   const scrollToContainer = (tagName: string) => {
     const el = document.getElementById(tagName);
     if (el) {
@@ -10,15 +18,48 @@ const LowStockAlerts = () => {
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
+
+  const getLowStockProducts = async () => {
+    try{
+      setLoading(true);
+      const response = await axios.get(`${BACKEND_URL}/data/lowstockproducts`);
+      console.log("Low Stock Products: ",response.data);
+      setProducts(response.data.products)
+    } catch(error:any){
+      console.log("Error occured while fetching low stock products");
+      console.log(error.message);
+    } finally{
+      setLoading(false);
+    }
+  }
+
+  const crtiticalProducts = products.filter(
+    p => p.quantityInStock===0
+  )
+  const 
+
+  useEffect(()=>{
+    getLowStockProducts();
+  },[])
+
+  if(loading){
+    return(
+      <div className="min-h-screen flex items-center justify-center ">
+        <Spinner/>
+
+      </div>
+    ) 
+  }
+  
   return (
     <div className="space-y-6">
       {/* No products in this status */}
-      <div className="flex flex-col items-center justify-center text-center space-y-2 py-10 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+      {/* <div className="flex flex-col items-center justify-center text-center space-y-2 py-10 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
         <Package size={40} className="text-gray-400 " />
         <p className="text-gray-500 text-sm md:text-base">
           No products in this category right now.
         </p>
-      </div>
+      </div> */}
       
       {/* Headers */}
       <div className="flex flex-col lg:flex-row items-start lg:justify-between lg:items-center gap-4">
