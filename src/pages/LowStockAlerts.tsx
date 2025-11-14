@@ -5,7 +5,7 @@ import type { Product } from "@/types/tableTypes";
 import axios from "axios";
 import { Package, TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
-//Testing
+
 const LowStockAlerts = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [products, setProducts] = useState<Product[]>([]);
