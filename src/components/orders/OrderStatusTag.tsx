@@ -1,16 +1,18 @@
 import { cn } from "@/lib/utils"
-import type { OrderStatus } from "@/types/order"
-
+import type { OrderStatus } from "@/types/tableTypes"
+// "PENDING" | "CONFIRMED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED"
 const OrderStatusTag = ({status}:{status:OrderStatus}) => {
     const getStatusTag = (status:OrderStatus) => {
         switch(status){
-            case 'placed':
-                return { label: "Order Placed", bgColor:"bg-purple-500" }
-            case 'processing':
+            case 'PENDING':
+                return { label:  "Pending", bgColor:"bg-orange-500"}
+            case 'CONFIRMED':
+                return { label: "Confirmed", bgColor:"bg-yellow-500" }
+            case 'PROCESSING':
                 return { label: "Processing", bgColor:"bg-blue-500" }
-            case 'processed':
-                return { label: "Processed", bgColor:"bg-orange-500" }
-            case 'ready_to_dispatch':
+            case 'SHIPPED':
+                return { label: "Shipped", bgColor:"bg-purple-500" }
+            case 'DELIVERED':
                 return { label: "Ready To Dispatch", bgColor:"bg-green-500" }
             default:
                 return { label: status, bgColor:"bg-red-500" }

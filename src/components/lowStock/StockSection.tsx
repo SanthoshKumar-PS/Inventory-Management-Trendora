@@ -1,6 +1,7 @@
-import type { Product } from "@/types/inventory";
+import type { Product } from "@/types/tableTypes";
 import ProductCard from "./ProductCard";
 import { cn } from "@/lib/utils";
+import { Package } from "lucide-react";
 
 interface StockSectionProps {
     id:string;
@@ -17,10 +18,17 @@ const StockSection = ({id,title,color,type,products}:StockSectionProps) => {
         </h1>
         {/* Each product */}
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-5">
-        {Array.from({length:4}).map((_,i)=>(
-          <ProductCard key={i} type={type} product={null}/>
-
+        {products.length>0 && products.map((product,i)=>(
+          <ProductCard key={i} type={type} product={product}/>
         ))}
+        {products.length===0 && (
+          <div className="col-span-full flex flex-col items-center justify-center text-center space-y-2 py-10 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+            <Package size={40} className="text-gray-400 " />
+            <p className="text-gray-500 text-sm md:text-base">
+              No products in this category right now.
+            </p>
+          </div> 
+        )}
         </div>
 
       </div>

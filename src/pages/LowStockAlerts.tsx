@@ -33,10 +33,21 @@ const LowStockAlerts = () => {
     }
   }
 
-  const crtiticalProducts = products.filter(
-    p => p.quantityInStock===0
-  )
-  const 
+  let criticalProducts : Product[] = [];
+  let warningProducts: Product[] = [];
+  let lowProducts: Product[] = [];
+  products.forEach(product=>{
+    if(product.quantityInStock===0){
+      criticalProducts.push(product)
+    }
+    else if(product.quantityInStock<product.reorderLevel){
+      warningProducts.push(product)
+    }
+    else{
+      lowProducts.push(product)
+    }
+  })
+
 
   useEffect(()=>{
     getLowStockProducts();
@@ -75,9 +86,9 @@ const LowStockAlerts = () => {
 
         {/* Critical, Warning Low */}
         <div className="flex items-center gap-2">
-          <SeverityBadge type="critical" count={20} scrollToContainer={scrollToContainer} />
-          <SeverityBadge type="warning" count={10} scrollToContainer={scrollToContainer} />
-          <SeverityBadge type="low" count={5} scrollToContainer={scrollToContainer}/>
+          <SeverityBadge type="critical" count={criticalProducts.length} scrollToContainer={scrollToContainer} />
+          <SeverityBadge type="warning" count={warningProducts.length} scrollToContainer={scrollToContainer} />
+          <SeverityBadge type="low" count={lowProducts.length} scrollToContainer={scrollToContainer}/>
         </div>
       </div>
 
@@ -87,7 +98,7 @@ const LowStockAlerts = () => {
         title="Critical - Out of Stock" 
         color='text-red-500' 
         type='critical' 
-        products={[]}
+        products={criticalProducts}
         />
 
       {/* Warning - Very Low Stock */}
@@ -96,7 +107,7 @@ const LowStockAlerts = () => {
         title="Warning - Very Low Stock" 
         color='text-orange-500' 
         type='warning' 
-        products={[]}
+        products={warningProducts}
         />
 
       {/* Low Stock */}
@@ -105,7 +116,7 @@ const LowStockAlerts = () => {
         title="Low Stock" 
         color='text-gray-600' 
         type='low' 
-        products={[]}
+        products={lowProducts}
         />
 
     </div>

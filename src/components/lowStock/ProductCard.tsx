@@ -1,13 +1,17 @@
 import { Package, ShoppingCart } from "lucide-react"
 import SeverityBadge from "./SeverityBadge"
 import { Button } from "../ui/button"
-import type { Product } from "@/types/inventory"
+import type { Product } from "@/types/tableTypes";
+import { formatProductId } from "@/lib/formatProductId";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 interface ProductCardProps {
     type: 'critical' | 'warning' | 'low'
-    product : Product | null; //For UI purpos, need to give actual Data
+    product : Product ; //For UI purpos, need to give actual Data
 }
 const ProductCard = ({type,product}:ProductCardProps) => {
+  const rePurchaseQuantity = product.reorderLevel-product.quantityInStock;
+  const rePurchaseCost = rePurchaseQuantity* product.discountedPrice
   return (
         <div className="bg-white border border-gray-300 rounded-lg p-4 md:p-5 space-y-2 md:space-y-4">
           {/* Package, Heading,badge */}
@@ -17,9 +21,9 @@ const ProductCard = ({type,product}:ProductCardProps) => {
                 <Package size={26} />
               </div>
               <div>
-                <h3 className="font-medium max-w-40 truncate">Wireless Mouse Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt quibusdam et alias dolorem eius voluptatum ipsam at cum nisi enim!</h3>
+                <h3 className="font-medium max-w-40 truncate">{product.name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  SKU: Product-001
+                  SKU: {formatProductId(product.id)}
                 </p>
               </div>
             </div>
@@ -30,19 +34,19 @@ const ProductCard = ({type,product}:ProductCardProps) => {
           <div className="space-y-2 font-medium">
             <div className="flex justify-between items-center">
               <p className="text-gray-500/80">Current Stock:</p>
-              <p className="">{"0 pieces"}</p>
+              <p className="">{`${product.quantityInStock} pieces`}</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="text-gray-500/80">Reorder Level:</p>
-              <p className="">{"15 pieces"} pieces</p>
+              <p className="">{`${product.reorderLevel} pieces`}</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="text-gray-500/80">Recommended Order:</p>
-              <p className="">{"40 pieces"}</p>
+              <p className="">{`${(product.reorderLevel-product.quantityInStock)} pieces`}</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="text-gray-500/80">Estimated Cost:</p>
-              <p className="">{"$8000"}</p>
+              <p className="">{formatCurrency(rePurchaseCost)}</p>
             </div>
           </div>
 

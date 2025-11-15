@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { mockProducts } from "@/lib/datas/mockData";
@@ -47,6 +48,10 @@ const Products = () => {
     getAllProducts();
 
   },[])
+
+  if (loading) {
+    return <div className="flex justify-center items-center min-h-full"><Spinner /></div>;
+  }
 
   return (
     <div className="space-y-4">

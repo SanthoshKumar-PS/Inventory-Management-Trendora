@@ -1,5 +1,5 @@
 export type UserRole = "ADMIN" | "USER" | "SELLER";
-export type OrderStatus = "PENDING" | "CONFIRMED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED"
+export type OrderStatus = "PENDING" | "CONFIRMED" | "PROCESSING" | "PROCESSED" | "SHIPPED" | "DELIVERED" | "CANCELLED"
 
 export interface Feature {
   label: string;
