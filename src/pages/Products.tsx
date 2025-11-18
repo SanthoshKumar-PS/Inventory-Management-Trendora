@@ -1,4 +1,7 @@
+import EditProductDialog from "@/components/products/EditProductDialog";
+import ViewProductDialog from "@/components/products/ViewProductDialog";
 import { Spinner } from "@/components/Spinner";
+import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { mockProducts } from "@/lib/datas/mockData";
@@ -14,20 +17,16 @@ const Products = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [products, setProducts] = useState<Product[]>([]);
-  // const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isViewProductDialogOpen, setIsViewProductDialogOpen] = useState<boolean>(false);
+  const [isUpdateProductDialogOpen, setIsUpdateProductDialogOpen] = useState<boolean>(false);
 
   const filterProducts: Product[] = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const getStatus = (quantityInStock:number, reOrderLevel:number):{label:string;color:string} => {
-    if(quantityInStock===0) return {'label':'Out Of Stock','color':'bg-red-500'}
-    else if(quantityInStock<=reOrderLevel) return {'label':'Low Stock','color':'bg-orange-500'}
-    return {'label':'In Stock','color':'bg-green-500'}
-  }
 
   const getAllProducts = async () => {
     try{
@@ -42,6 +41,10 @@ const Products = () => {
     } finally{
       setLoading(false)
     }
+  }
+
+  const updateProductById = async (product: Product) => {
+
   }
 
   useEffect(()=>{
@@ -81,15 +84,17 @@ const Products = () => {
       </div>
 
       {/* Products */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filterProducts.length>0 && filterProducts.map((product)=>{
-          const statusLabelColor = getStatus(product.quantityInStock,product.reorderLevel)
+          // const statusLabelColor = getStatus(product.quantityInStock,product.reorderLevel)
           return (
           <div key={product.id} className="bg-white border border-gray-300 rounded-lg p-2 md:p-5 space-y-2">
             {/* Icon and Label */}
             <div className="flex justify-between items-start">
               <Package className="w-8 h-8 text-blue-500"/>
-              <p className={cn('px-2 py-1 rounded-xl font-medium text-white text-xs',statusLabelColor.color)}>{statusLabelColor.label}</p>
+              {/* <p className={cn('px-2 py-1 rounded-xl font-medium text-white text-xs',statusLabelColor.color)}>{statusLabelColor.label}</p> */}
+              {/* {StatusBadge(product.quantityInStock,product.reorderLevel)} */}
+              <StatusBadge quantityInStock={product.quantityInStock} reOrderLevel={product.reorderLevel}/>
             </div>
 
             {/* Heading and Subheading */}
@@ -120,13 +125,13 @@ const Products = () => {
 
             <div className="border-t w-full border-gray-300"/>
 
-            {/* View Details and Edit */}
+            {/* View Details and Update */}
             <div className="gap-2 flex flex-col lg:flex-row w-full">
-              <Button variant='outline' className="flex-1 border-gray-300 shadow-md">
+              <Button variant='outline' className="flex-1 border-gray-300 shadow-md" onClick={()=>{setIsViewProductDialogOpen(true); setSelectedProduct(product)}}>
                 View Details
               </Button>
-              <Button variant='outline' className="flex-1 w-full border-gray-300 shadow-md">
-                Edit
+              <Button variant='outline' className="flex-1 w-full border-gray-300 shadow-md" onClick={()=>{setIsUpdateProductDialogOpen(true); setSelectedProduct(product)}}>
+                Update
               </Button>
 
             </div>
@@ -145,6 +150,11 @@ const Products = () => {
         </div>)}
 
       </div>
+
+      {/* View Product */}
+      <ViewProductDialog product={selectedProduct} open={isViewProductDialogOpen} onClose={()=>{setIsViewProductDialogOpen(false); setSelectedProduct(null)}}/>
+      {/* View Product */}
+      <EditProductDialog product={selectedProduct} open={isUpdateProductDialogOpen} onClose={()=>{setIsUpdateProductDialogOpen(false); setSelectedProduct(null)}} onSubmit={updateProductById}/>
     </div>
   );
 };
