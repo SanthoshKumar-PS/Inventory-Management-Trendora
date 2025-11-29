@@ -1,4 +1,5 @@
 import { useDebounce } from "@/components/orders/DebounceSearch";
+import { ViewDetailsDialog } from "@/components/orders/Dialog/ViewDetails";
 import OrderStatusTag from "@/components/orders/OrderStatusTag";
 import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,9 @@ const Orders = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [isViewDetailsDialogOpen, setIsViewDetailsDialogOpen] = useState<boolean>(false);
+  const [selectedOrder, setSeelctedOrder] = useState<Order|null>(null)
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [statusCount, setStatusCount] = useState({
     CONFIRMED: 0,
@@ -39,17 +43,6 @@ const Orders = () => {
   const [searchParam, setSearchParam] = useState<string>("");
   const debounceValue = useDebounce(searchParam, 300);
 
-  // const filterOrders = orders.filter(order=>{
-  //   const search = searchParam.toLowerCase();
-  //   const containsSearchParam = (
-  //     order.orderNo.toLowerCase().includes(search) ||
-  //     order.status.toLowerCase().includes(search) ||
-  //     order.user.email.toLowerCase().includes(search) ||
-  //     order.address.city.toLowerCase().includes(search)
-  //   );
-  //   const containsFilteredStatus = selectedFilter==='all' || selectedFilter===order.status;
-  //   return containsSearchParam && containsFilteredStatus
-  // })
   const filterOrders = orders.filter((order) => {
     const containsFilteredStatus =
       selectedFilter === "all" || selectedFilter === order.status;
@@ -258,35 +251,6 @@ const Orders = () => {
                 ))}
               </div>
 
-              {/* <div className="border-t border-gray-300" /> */}
-
-              {/* Subtotal,Tax and Shipping */}
-              {/* <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span>{formatCurrency(order.totalAmount)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Tax</span>
-                  <span>{"N/A"}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span>{formatCurrency(0)}</span>
-                </div>
-                <div className="border-t border-gray-300" />
-                <div className="flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>{formatCurrency(order.totalAmount)}</span>
-                </div>
-              </div> */}
-              {/* {order.notes && (
-                  <div className="p-3 rounded-lg bg-muted">
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-medium">Notes:</span> {order.notes}
-                    </p>
-                  </div>
-                )} */}
 
               {/* Order Date and Buttons */}
               <div className="flex flex-col md:flex-row gap-2 md:justify-between items-start md:items-center">
@@ -294,7 +258,12 @@ const Orders = () => {
                   Order Date: {new Date(order.orderDate).toLocaleDateString()}
                 </div>
                 <div className="flex gap-2 ">
-                  <Button variant="outline">
+                  <Button variant="outline" 
+                    onClick={()=>{
+                      setIsViewDetailsDialogOpen(true)
+                      setSeelctedOrder(order)
+                    }}
+                  >
                     <Eye size={16} />
                     <p>View Details</p>
                   </Button>
@@ -318,6 +287,16 @@ const Orders = () => {
             <p className="text-sm">Try adjusting your search</p>
           </div>
         </div>
+      )}
+
+      {selectedOrder && (
+        <ViewDetailsDialog 
+          open={isViewDetailsDialogOpen} 
+          onClose = {()=>{
+            setIsViewDetailsDialogOpen(false)
+          }}
+          order={selectedOrder!}
+        />
       )}
     </div>
   );

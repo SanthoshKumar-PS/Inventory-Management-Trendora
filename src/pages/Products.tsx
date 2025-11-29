@@ -1,4 +1,4 @@
-import EditProductDialog from "@/components/products/EditProductDialog";
+import EditProductDialog from "@/components/products/UpdateProductDialog";
 import ViewProductDialog from "@/components/products/ViewProductDialog";
 import { Spinner } from "@/components/Spinner";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -21,6 +21,7 @@ const Products = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isViewProductDialogOpen, setIsViewProductDialogOpen] = useState<boolean>(false);
   const [isUpdateProductDialogOpen, setIsUpdateProductDialogOpen] = useState<boolean>(false);
+  const [isProductUpdating, setIsProductUpdating] = useState<boolean>(false);
 
   const filterProducts: Product[] = products.filter(
     (product) =>
@@ -44,6 +45,29 @@ const Products = () => {
   }
 
   const updateProductById = async (product: Product) => {
+    try{
+      setIsProductUpdating(true);
+      const response = await axios.patch(`${BACKEND_URL}/data/product`,{
+        id:product.id,
+        name:product.name,
+        quantityInStock:product.quantityInStock,
+        reorderLevel:product.reorderLevel,
+        discountedPrice:product.discountedPrice,
+        actualPrice:product.actualPrice,
+      });
+      console.log("Updated Product: ",response.data)
+      setProducts(prevProducts =>
+        prevProducts.map(prev =>
+          prev.id === product.id ? { ...prev, ...product } : prev
+        )
+      );
+      setIsUpdateProductDialogOpen(false)
+
+    } catch(error:any){
+      console.log("Error occured while updating product :",error.message);
+    } finally{
+      setIsProductUpdating(false);
+    }
 
   }
 
@@ -154,7 +178,7 @@ const Products = () => {
       {/* View Product */}
       <ViewProductDialog product={selectedProduct} open={isViewProductDialogOpen} onClose={()=>{setIsViewProductDialogOpen(false); setSelectedProduct(null)}}/>
       {/* View Product */}
-      <EditProductDialog product={selectedProduct} open={isUpdateProductDialogOpen} onClose={()=>{setIsUpdateProductDialogOpen(false); setSelectedProduct(null)}} onSubmit={updateProductById}/>
+      <EditProductDialog product={selectedProduct} open={isUpdateProductDialogOpen} onClose={()=>{setIsUpdateProductDialogOpen(false); setSelectedProduct(null)}} onSubmit={updateProductById} isLoading={isProductUpdating}/>
     </div>
   );
 };
