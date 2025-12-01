@@ -1,4 +1,5 @@
 import { useDebounce } from "@/components/orders/DebounceSearch";
+import { UpdateStatusDialog } from "@/components/orders/Dialog/UpdateStatusDialog";
 import { ViewDetailsDialog } from "@/components/orders/Dialog/ViewDetails";
 import OrderStatusTag from "@/components/orders/OrderStatusTag";
 import { Spinner } from "@/components/Spinner";
@@ -7,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { mockOrders } from "@/lib/datas/mockOrders";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { formatProductId } from "@/lib/formatProductId";
+import { getNextStatus } from "@/lib/getNextStats";
 import type { Order, OrderStatus } from "@/types/tableTypes";
 import axios from "axios";
 // OrderStatus = 'placed' | 'processing' | 'processed' | 'ready_to_dispatch' | 'dispatched' | 'delivered' | 'cancelled';
@@ -25,9 +27,11 @@ import { useEffect, useState } from "react";
 const Orders = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [loading, setLoading] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const [isViewDetailsDialogOpen, setIsViewDetailsDialogOpen] = useState<boolean>(false);
-  const [selectedOrder, setSeelctedOrder] = useState<Order|null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<Order|null>(null)
+  const [isUpdateStatusDialogOpen, setIsUpdateStatusDialogOpen] = useState<boolean>(false);
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [statusCount, setStatusCount] = useState({
@@ -71,6 +75,33 @@ const Orders = () => {
       setLoading(false);
     }
   };
+
+  const handleUpdateOrderStatus = async () =>{
+    try {
+      setIsUpdating(true);
+      const response = await axios.patch(`${BACKEND_URL}/data/orderstatus`,{
+        orderNo:selectedOrder?.orderNo,
+        updatedstatus: getNextStatus(selectedOrder?.status!)
+      })
+      setOrders(prev=>
+        prev.map(order => (
+          order.id === selectedOrder?.id 
+          ? {...order,status:response.data.order.status}
+          : order  
+        ))
+      )
+      //TODO: Toast Success Dialog
+      getOrders()
+
+    } catch (error:any) {
+      console.log("Error occured while updating status");
+      //TODO: Toast error
+    } finally{
+      setIsUpdating(false);
+      // Close Update Dialog
+      setIsUpdateStatusDialogOpen(false);
+    }
+  }
   useEffect(() => {
     getOrders();
   }, [page,limit, debounceValue, selectedFilter]);
@@ -261,16 +292,24 @@ const Orders = () => {
                   <Button variant="outline" 
                     onClick={()=>{
                       setIsViewDetailsDialogOpen(true)
-                      setSeelctedOrder(order)
+                      setSelectedOrder(order)
                     }}
                   >
                     <Eye size={16} />
                     <p>View Details</p>
                   </Button>
-                  <Button variant="outline">
-                    <CircleCheck size={16} />
-                    <p>Update Status</p>
-                  </Button>
+                  {getNextStatus(order.status) && (
+                    <Button variant="outline"
+                      onClick={()=>{
+                        setIsUpdateStatusDialogOpen(true)
+                        setSelectedOrder(order)
+                      }}
+                    >
+                      <CircleCheck size={16} />
+                      <p>Update Status</p>
+                    </Button>
+                  )}
+
                 </div>
               </div>
             </div>
@@ -289,13 +328,26 @@ const Orders = () => {
         </div>
       )}
 
-      {selectedOrder && (
+      {isViewDetailsDialogOpen && selectedOrder &&(
         <ViewDetailsDialog 
           open={isViewDetailsDialogOpen} 
           onClose = {()=>{
             setIsViewDetailsDialogOpen(false)
+            setSelectedOrder(null)
           }}
           order={selectedOrder!}
+        />
+      )}
+      {isUpdateStatusDialogOpen && selectedOrder && getNextStatus(selectedOrder.status) && (
+        <UpdateStatusDialog
+          open={isUpdateStatusDialogOpen}
+          onClose={()=>{
+            setIsUpdateStatusDialogOpen(false)
+            setSelectedOrder(null)
+          }}
+          order={selectedOrder!}
+          isUpdating={isUpdating}
+          handleUpdateOrderStatus={handleUpdateOrderStatus}
         />
       )}
     </div>
