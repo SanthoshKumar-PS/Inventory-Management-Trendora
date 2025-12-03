@@ -10,6 +10,8 @@ const OrderStatusTag = ({status}:{status:OrderStatus}) => {
                 return { label: "Confirmed", bgColor:"bg-yellow-500" }
             case 'PROCESSING':
                 return { label: "Processing", bgColor:"bg-blue-500" }
+            case 'PROCESSED':
+                return { label: "Processed", bgColor:"bg-indigo-500" }
             case 'SHIPPED':
                 return { label: "Shipped", bgColor:"bg-purple-500" }
             case 'DELIVERED':

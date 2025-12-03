@@ -162,23 +162,23 @@ const Orders = () => {
         <div className="flex items-center justify-between gap-2">
 
         {/* Rows per page */}
-            <div>
-            <span className="mx-5">Items per page</span>
-            <select
-                className="border border-gray-300 rounded-md shadow-md px-1 py-1 bg-gray-100"
-                value={limit}
-                onChange={(e) => {
-                setLimit(Number(e.target.value));
-                setPage(1)
-                }}
-            >
-                {[2, 5, 10, 20, 30, 100].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                    {pageSize}
-                </option>
-                ))}
-            </select>
-            </div>
+        <div>
+          <span className="mx-5">Items per page</span>
+          <select
+            className="border border-gray-300 rounded-md shadow-md px-1 py-1 bg-gray-100"
+            value={limit}
+            onChange={(e) => {
+            setLimit(Number(e.target.value));
+            setPage(1)
+            }}
+          >
+              {[2, 5, 10, 20, 30, 100].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                {pageSize}
+              </option>
+              ))}
+          </select>
+        </div>
         {/* Pagination */}
         <div className="flex items-center space-x-2">
           <p className="mr-4 ">{page} of {totalPages}</p>
