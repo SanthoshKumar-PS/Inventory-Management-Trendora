@@ -1,5 +1,6 @@
 import SeverityBadge from "@/components/lowStock/SeverityBadge";
 import StockSection from "@/components/lowStock/StockSection";
+import EditProductDialog from "@/components/products/UpdateProductDialog";
 import { Spinner } from "@/components/Spinner";
 import type { Product } from "@/types/tableTypes";
 import axios from "axios";
@@ -10,7 +11,14 @@ const LowStockAlerts = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  
+
+  const [isUpdateProductDialogOpen, setIsUpdateProductDialogOpen] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [isProductUpdating, setIsProductUpdating] = useState<boolean>(false);
+  const handleUpdateProduct = (product:Product) => {
+    setSelectedProduct(product)
+    setIsUpdateProductDialogOpen(true)
+  }
   const scrollToContainer = (tagName: string) => {
     const el = document.getElementById(tagName);
     if (el) {
@@ -32,6 +40,32 @@ const LowStockAlerts = () => {
       setLoading(false);
     }
   }
+  const updateProductById = async (product: Product) => {
+    try{
+      setIsProductUpdating(true);
+      const response = await axios.patch(`${BACKEND_URL}/data/product`,{
+        id:product.id,
+        name:product.name,
+        quantityInStock:product.quantityInStock,
+        reorderLevel:product.reorderLevel,
+        discountedPrice:product.discountedPrice,
+        actualPrice:product.actualPrice,
+      });
+      console.log("Updated Product: ",response.data)
+      setProducts(prevProducts =>
+        prevProducts.map(prev =>
+          prev.id === product.id ? { ...prev, ...product } : prev
+        )
+      );
+      setIsUpdateProductDialogOpen(false)
+
+    } catch(error:any){
+      console.log("Error occured while updating product :",error.message);
+    } finally{
+      setIsProductUpdating(false);
+    }
+
+  }
 
   let criticalProducts : Product[] = [];
   let warningProducts: Product[] = [];
@@ -52,6 +86,8 @@ const LowStockAlerts = () => {
   useEffect(()=>{
     getLowStockProducts();
   },[])
+
+
 
   if(loading){
     return(
@@ -99,6 +135,7 @@ const LowStockAlerts = () => {
         color='text-red-500' 
         type='critical' 
         products={criticalProducts}
+        handleUpdateProduct={handleUpdateProduct}
         />
 
       {/* Warning - Very Low Stock */}
@@ -108,6 +145,7 @@ const LowStockAlerts = () => {
         color='text-orange-500' 
         type='warning' 
         products={warningProducts}
+        handleUpdateProduct={handleUpdateProduct}
         />
 
       {/* Low Stock */}
@@ -117,7 +155,21 @@ const LowStockAlerts = () => {
         color='text-gray-600' 
         type='low' 
         products={lowProducts}
+        handleUpdateProduct={handleUpdateProduct}
         />
+
+
+      {/* Edit Product Dialog */}
+      <EditProductDialog 
+        product={selectedProduct} 
+        open={isUpdateProductDialogOpen} 
+        onClose={()=>{
+          setIsUpdateProductDialogOpen(false); 
+          setSelectedProduct(null)
+        }} 
+        onSubmit={updateProductById} 
+        isLoading={isProductUpdating}
+      />
 
     </div>
   );

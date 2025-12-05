@@ -9,5 +9,10 @@ export interface DashboardCardData {
 export interface DashboardResponse {
     message:string,
     cardData: DashboardCardData
+}
 
+export type top5ProductType = {
+  productId: number, 
+  revenue: number, 
+  productName: string
 }

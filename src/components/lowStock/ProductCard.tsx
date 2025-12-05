@@ -8,8 +8,9 @@ import { formatCurrency } from "@/lib/formatCurrency";
 interface ProductCardProps {
     type: 'critical' | 'warning' | 'low'
     product : Product ; //For UI purpos, need to give actual Data
+    handleUpdateProduct : (product:Product) => void
 }
-const ProductCard = ({type,product}:ProductCardProps) => {
+const ProductCard = ({type,product,handleUpdateProduct}:ProductCardProps) => {
   const rePurchaseQuantity = product.reorderLevel-product.quantityInStock;
   const rePurchaseCost = rePurchaseQuantity* product.discountedPrice
   return (
@@ -50,10 +51,14 @@ const ProductCard = ({type,product}:ProductCardProps) => {
             </div>
           </div>
 
-          {/* Create Purchase Order Button */}
-          <Button className="w-full flex-1 bg-blue-500 py-5">
+          {/* Update Product Stock */}
+          <Button className="w-full flex-1 bg-blue-500 py-5"
+            onClick={()=>{
+              handleUpdateProduct(product)
+            }}  
+          >
             <ShoppingCart size={20}/>
-            <p>Create Purchase Order</p>
+            <p>Update Product Stock</p>
           </Button>
           
         </div>
