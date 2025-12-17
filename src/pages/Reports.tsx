@@ -1,5 +1,6 @@
 import StatsCard from "@/components/dashboard/StatsCard"
 import { DailySalesChart } from "@/components/reports/DailySalesChart"
+import { LineChartTest } from "@/components/reports/LineChartTest"
 import { ProductsRevenue } from "@/components/reports/ProductsRevenue"
 import { Spinner } from "@/components/Spinner"
 import { formatCurrency } from "@/lib/formatCurrency"
@@ -78,6 +79,7 @@ const Reports = () => {
         <ProductsRevenue top5RevenueProducts={top5RevenueProducts}/>
         <ProductsRevenue top5RevenueProducts={top5RevenueProducts}/>
         <ProductsRevenue top5RevenueProducts={top5RevenueProducts}/>
+        <LineChartTest/>
         <DailySalesChart data={[
   { date: "2025-12-01", revenue: 1200 },
   { date: "2025-12-02", revenue: 1850 },
@@ -86,18 +88,6 @@ const Reports = () => {
   { date: "2025-12-05", revenue: 2100 },
   { date: "2025-12-06", revenue: 1800 },
   { date: "2025-12-07", revenue: 2000 },
-  { date: "2025-12-08", revenue: 2100 },
-  { date: "2025-12-09", revenue: 500 },
-  { date: "2025-12-10", revenue: 700 },
-  { date: "2025-12-11", revenue: 450 },
-  { date: "2025-12-12", revenue: 3000 },
-  { date: "2025-12-13", revenue: 1200 },
-  { date: "2025-12-14", revenue: 1850 },
-  { date: "2025-12-15", revenue: 950 },
-  { date: "2025-12-16", revenue: 1600 },
-  { date: "2025-12-17", revenue: 2100 },
-  { date: "2025-12-18", revenue: 1800 },
-  { date: "2025-12-19", revenue: 2000 },
 ]
 }/>
       </div>
